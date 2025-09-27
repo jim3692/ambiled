@@ -31,7 +31,7 @@ int main() {
     analyze_pixels(analysis, pixels, total_pixels, &cfg);
 
     printf(
-        "{ \"state\": \"{ \\\"rgb_color\\\": [ %d, %d, %d ], \\\"brightness_pct\\\": %d, \\\"transistion\\\": 0 }\" }",
+        "{ \"state\": \"{ \\\"rgb_color\\\": [ %d, %d, %d ], \\\"brightness_pct\\\": %d, \\\"transition\\\": 0 }\" }",
         idx_to_int(analysis->preferedColor, r),
         idx_to_int(analysis->preferedColor, g),
         idx_to_int(analysis->preferedColor, b),
