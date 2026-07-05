@@ -11,28 +11,22 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       getPkgs = system: nixpkgs.legacyPackages.${system};
 
-      getAmbiledBin =
-        pkgs:
-        pkgs.runCommand "ambiled"
-          {
-            buildInputs = [ pkgs.imagemagick ];
-          }
-          ''
-            mkdir -p $out/bin
-            cd ${./src}
-
-            export PATH="$PATH:${pkgs.gcc}/bin:${pkgs.imagemagick}/bin"
-            cc \
-                `MagickWand-config --cflags --cppflags` \
-                -O2 -o $out/bin/ambiled common.c analyze-image.c main.c \
-                `MagickWand-config --ldflags --libs`
-          '';
-
       getShellDeps =
         pkgs: with pkgs; [
-          gcc
           imagemagick
         ];
+
+      getAmbiledBin =
+        pkgs:
+        pkgs.stdenv.mkDerivation {
+          name = "ambiled";
+          src = ./src;
+          buildInputs = getShellDeps pkgs;
+          installPhase = ''
+            mkdir -p $out/bin
+            cp ambiled $out/bin/
+          '';
+        };
 
       getShell =
         {
