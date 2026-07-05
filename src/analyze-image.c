@@ -48,16 +48,12 @@ void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t
 
     PixelWand *pw = NewPixelWand();
     for (int i = 0; i < COLORS_AMOUNT; i++) {
-        double r = idx_to_double(i, r);
-        double g = idx_to_double(i, g);
-        double b = idx_to_double(i, b);
-
-        PixelSetRed(pw, r);
-        PixelSetGreen(pw, g);
-        PixelSetBlue(pw, b);
+        if (analysis->pixelCounts[i] == 0) {
+            continue;
+        }
 
         double h, s, l;
-        PixelGetHSL(pw, &h, &s, &l);
+        idx_to_hsl(i, &h, &s, &l);
 
         if (
             s > config->min_saturation &&

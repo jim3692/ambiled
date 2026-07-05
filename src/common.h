@@ -44,6 +44,10 @@ struct Config {
     double lightness_weight;
 };
 
+struct HSL {
+    double h, s, l;
+};
+
 struct Pixel {
     uint8_t r;
     uint8_t g;
@@ -62,6 +66,7 @@ union ColorIndex {
 int color_to_idx(struct Pixel *pixel);
 
 void idx_to_color(int idx, struct Pixel *pixel);
+void idx_to_hsl(int idx, double* h, double* s, double* l);
 
 #define is_arg(arg) (!strcmp(argv[i], arg))
 
