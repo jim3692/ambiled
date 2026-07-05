@@ -1,9 +1,11 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef AMBILED_COMMON_H
+#define AMBILED_COMMON_H
 
+#include <math.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <stdlib.h>
+#include <string.h>
+
 #include <MagickWand/MagickWand.h>
 
 #define COLORS_DEPTH 3
@@ -24,6 +26,23 @@
   exit(-1); \
 }
 
+struct Config {
+    int stdin;
+
+    char* image;
+
+    int should_resize;
+    int resize_w;
+    int resize_h;
+
+    double min_saturation;
+    double max_saturation;
+    double saturation_weight;
+
+    double min_lightness;
+    double max_lightness;
+    double lightness_weight;
+};
 
 struct Pixel {
     uint8_t r;
@@ -40,9 +59,11 @@ union ColorIndex {
     } color;
 };
 
-extern int color_to_idx(struct Pixel *pixel);
+int color_to_idx(struct Pixel *pixel);
 
-extern void idx_to_color(int idx, struct Pixel *pixel);
+void idx_to_color(int idx, struct Pixel *pixel);
+
+#define is_arg(arg) (!strcmp(argv[i], arg))
 
 #define idx_to_double(idx, channel) (((*(union ColorIndex *)&idx).color.channel << (8 - COLORS_DEPTH)) / (double)COLORS_MASK)
 #define idx_to_int(idx, channel) ((*(union ColorIndex *)&idx).color.channel << (8 - COLORS_DEPTH))

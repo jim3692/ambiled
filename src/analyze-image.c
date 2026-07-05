@@ -32,7 +32,7 @@ void get_image_pixels(MagickWand *mw, struct Pixel *pixels) {
         ThrowWandException(mw);
 }
 
-void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t pixels_count, struct ImageAnalysisConfig* config) {
+void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t pixels_count, struct Config* config) {
     for (int i = 0; i < pixels_count; i++) {
         int r = pixels[i].r & COLORS_MASK;
         int g = pixels[i].g & COLORS_MASK;
@@ -60,16 +60,16 @@ void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t
         PixelGetHSL(pw, &h, &s, &l);
 
         if (
-            s > config->minSaturation &&
-            s < config->maxSaturation &&
-            l > config->minLightness &&
-            l < config->maxLightness
+            s > config->min_saturation &&
+            s < config->max_saturation &&
+            l > config->min_lightness &&
+            l < config->max_lightness
         ) {
             analysis->colorScores[i] =
                 (double)analysis->pixelCounts[i]
                 * (
-                    (config->saturationWeight * s)
-                    + (config->lightnessWeight * l)
+                    (config->saturation_weight * s)
+                    + (config->lightness_weight * l)
                 );
         }
     }
