@@ -61,7 +61,34 @@
             accetto/ubuntu-vnc-xfce-g3:24.04
         '';
     in
-    {
+    rec {
+      apps = forAllSystems (system: {
+        benchmark =
+          with (getPkgs system);
+          let
+            script = writeShellScript "ambiled-benchmark" ''
+              cd "$1"
+
+              frames=$(ls | head -n 100)
+              framesCount=$(echo "$frames" | wc -l)
+
+              startTime="''${EPOCHREALTIME/./}"
+              echo "$frames" | ${packages.${system}.ambiled}/bin/ambiled --stdin >/dev/null
+              endTime="''${EPOCHREALTIME/./}"
+
+              echo "$framesCount frames"
+              elapsedMs=$(( ( $endTime - startTime ) / 1000 ))
+              echo "$elapsedMs ms"
+              averageFps=$(( $framesCount * 1000 / $elapsedMs ))
+              echo "$averageFps fps"
+            '';
+          in
+          {
+            program = toString script;
+            type = "app";
+          };
+      });
+
       packages = forAllSystems (system: rec {
         default = ambiled;
         ambiled = getAmbiledBin (getPkgs system);
