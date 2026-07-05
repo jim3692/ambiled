@@ -3,6 +3,8 @@
   outputs =
     { nixpkgs, ... }:
     let
+      inherit (nixpkgs) lib;
+
       supportedSystems = [
         "aarch64-linux"
         "x86_64-linux"
@@ -33,7 +35,18 @@
           pkgs,
           extras ? [ ],
         }:
-        pkgs.mkShell { buildInputs = (getShellDeps pkgs) ++ extras; };
+        pkgs.mkShell rec {
+          buildInputs = (getShellDeps pkgs) ++ extras ++ [ pkgs.bear ];
+          CPATH = lib.makeSearchPathOutput "dev" "include" buildInputs;
+
+          shellHook = ''
+            gen_compile_commands() {
+              bear -- make -C src rebuild
+            }
+
+            gen_compile_commands
+          '';
+        };
 
       runInDockerXfce =
         pkgs:
