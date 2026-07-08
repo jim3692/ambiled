@@ -87,6 +87,20 @@
             program = toString script;
             type = "app";
           };
+
+        build-docker =
+          with (getPkgs system);
+          let
+            script = writeShellScript "ambiled-build-docker" ''
+              export PATH="${nix-serve-ng}:$PATH"
+              cd docker
+              source build.sh
+            '';
+          in
+          {
+            program = toString script;
+            type = "app";
+          };
       });
 
       packages = forAllSystems (system: rec {
