@@ -36,6 +36,11 @@ int main(int argc, char *argv[]) {
 
         if (is_arg("--no-resize")) {
             config.should_resize = 0;
+            continue;
+        }
+
+        if (is_arg("--resize")) {
+            config.should_resize = 1;
             config.resize_w = atoi(argv[i + 1]);
             config.resize_h = atoi(argv[i + 2]);
             i += 2;
