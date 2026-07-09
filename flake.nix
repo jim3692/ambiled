@@ -92,7 +92,7 @@
           with (getPkgs system);
           let
             script = writeShellScript "ambiled-build-docker" ''
-              export PATH="${nix-serve-ng}:$PATH"
+              export PATH="${nix-serve}/bin:$PATH"
               cd docker
               source build.sh
             '';
