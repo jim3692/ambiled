@@ -13,6 +13,29 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       getPkgs = system: nixpkgs.legacyPackages.${system};
 
+      imagemagickMinimal =
+        pkgs:
+        pkgs.imagemagick.override {
+          bzip2Support = false;
+          djvulibreSupport = false;
+          fontconfigSupport = false;
+          freetypeSupport = false;
+          ghostscriptSupport = false;
+          lcms2Support = false;
+          libheifSupport = false;
+          libjxlSupport = false;
+          liblqr1Support = false;
+          libraqmSupport = false;
+          librawSupport = false;
+          librsvgSupport = false;
+          libtiffSupport = false;
+          libwebpSupport = false;
+          libxml2Support = false;
+          libXtSupport = false;
+          openexrSupport = false;
+          zlibSupport = false;
+        };
+
       getShellDeps =
         pkgs: with pkgs; [
           imagemagick
@@ -106,6 +129,11 @@
       packages = forAllSystems (system: rec {
         default = ambiled;
         ambiled = getAmbiledBin (getPkgs system);
+        ambiled-minimal =
+          let
+            pkgs = getPkgs system;
+          in
+          getAmbiledBin (pkgs // { imagemagick = imagemagickMinimal pkgs; });
       });
 
       devShells = forAllSystems (system: {
