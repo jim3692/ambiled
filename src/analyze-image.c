@@ -46,7 +46,6 @@ void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t
         analysis->colorSum += b;
     }
 
-    PixelWand *pw = NewPixelWand();
     for (int i = 0; i < COLORS_AMOUNT; i++) {
         if (analysis->pixelCounts[i] == 0) {
             continue;
@@ -69,7 +68,6 @@ void analyze_pixels(struct ImageAnalysis* analysis, struct Pixel* pixels, size_t
                 );
         }
     }
-    DestroyPixelWand(pw);
 
     analysis->preferedColor.idx = 0;
     analysis->preferedColorScore = analysis->colorScores[0];
