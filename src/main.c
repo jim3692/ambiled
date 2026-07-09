@@ -119,7 +119,7 @@ void handle_image(MagickWand *mw, struct Config* cfg) {
     struct Pixel pixels[total_pixels];
     get_image_pixels(mw, pixels);
 
-    struct ImageAnalysis analysis;
+    struct ImageAnalysis analysis = { 0 };
     analyze_pixels(&analysis, pixels, total_pixels, cfg);
 
     printf(
